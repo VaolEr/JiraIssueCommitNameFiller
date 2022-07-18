@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("org.jetbrains.intellij") version "1.5.2"
+    id ("io.freefair.lombok") version "6.5.0.3"
 }
 
 group = "com.valoler"

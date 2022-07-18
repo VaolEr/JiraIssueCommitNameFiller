@@ -8,23 +8,40 @@
     <name>JiraIssueCommitNameFiller</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="" url="">ValOlEr</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-  ]]></description>
+    <description>
+        This plugin goes to JIRA, search for issue using issue-key,
+        copy issue-summary and paste it as a head of commit message.
+    </description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>Git4Idea</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-
+        <applicationService
+                serviceImplementation="com.valoler.jiraissuecommitnamefiller.config.AppSettingsState"/>
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.valoler.jiraissuecommitnamefiller.config.AppSettingsConfigurable"
+                id="com.valoler.jiraissuecommitnamefiller.config.AppSettingsConfigurable"
+                displayName="Commit Message Header Filler Plugin"/>
     </extensions>
+    <actions>
+        <action id="com.valoler.mytestplugin.actions.TestAction"
+                class="com.valoler.jiraissuecommitnamefiller.actions.CommitMessageHeadFIllerAction"
+                text="Fill Commit Message Header From Jira Issue"
+                description="Fill the head of commit message from Jira issue summary."
+                icon="/icons/commit.png">
+            <add-to-group group-id="Vcs.MessageActionGroup" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl H"/>
+        </action>
+    </actions>
 </idea-plugin>
