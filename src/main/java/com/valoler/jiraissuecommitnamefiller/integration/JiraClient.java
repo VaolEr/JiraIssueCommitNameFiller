@@ -26,7 +26,7 @@ public class JiraClient {
     }
 
 
-    public CompletableFuture<HttpResponse<Supplier<JiraAuthInfoResponse>>> sendAsyncAuthRequest(){
+    public CompletableFuture<HttpResponse<Supplier<JiraAuthInfoResponse>>> sendAsyncAuthRequest() {
 
         String url = "rest/auth/1/session";
 
@@ -43,7 +43,7 @@ public class JiraClient {
     }
 
 
-    public CompletableFuture<HttpResponse<Supplier<JiraIssueResponse>>> sendIssueInfoRequest(String issueCode){
+    public CompletableFuture<HttpResponse<Supplier<JiraIssueResponse>>> sendIssueInfoRequest(String issueCode) {
 
         String urlTemplate = "rest/api/2/issue/%s?fields=summary";
 

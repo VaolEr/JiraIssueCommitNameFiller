@@ -2,7 +2,6 @@ package com.valoler.jiraissuecommitnamefiller.config;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.ui.Messages;
 import com.valoler.jiraissuecommitnamefiller.forms.AppSettingsGUI;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nls;

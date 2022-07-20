@@ -23,7 +23,7 @@ public class AppSettingsUtils {
      * @param credentials credentials as char arrays to encode
      * @return encoded user credentials
      */
-    public static String encodeUserCredentials(char[]... credentials){
+    public static String encodeUserCredentials(char[]... credentials) {
         AppSettingsState.getInstance().setCredentialsCount((long) credentials.length);
         return encodeCredential(
                 Arrays.stream(credentials)
@@ -56,7 +56,7 @@ public class AppSettingsUtils {
      * @param encodedUserCredentials encoded user credentials
      * @return tuple 3 with encoded user credentials
      */
-    public static String[] decodeUserCredentials(String encodedUserCredentials){
+    public static String[] decodeUserCredentials(String encodedUserCredentials) {
         return decodeString(encodedUserCredentials).split(SEPARATOR);
     }
 

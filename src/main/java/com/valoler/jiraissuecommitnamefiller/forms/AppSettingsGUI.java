@@ -3,7 +3,6 @@ package com.valoler.jiraissuecommitnamefiller.forms;
 import com.intellij.openapi.ui.Messages;
 import com.valoler.jiraissuecommitnamefiller.entity.JiraAuthInfoResponse;
 import com.valoler.jiraissuecommitnamefiller.integration.JiraClient;
-import com.valoler.jiraissuecommitnamefiller.utils.AppSettingsUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import javax.swing.*;
