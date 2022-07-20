@@ -31,7 +31,8 @@ public class CommitMessageHeadFIllerAction extends AnAction {
 
         if (credentials.length <= 0) {
             Messages.showInfoMessage("Please, fill user credentials in plugin settings. \n" +
-                            "File -> Settings -> Tools -> Commit Message Header Filler Plugin",
+                            "File -> Settings -> Tools -> Commit Message Header Filler Plugin or" +
+                            " CTRL + ALT + S -> Tools -> Commit Message Header Filler Plugin",
                     "Plugin Settings Message");
             return;
         }
@@ -43,13 +44,14 @@ public class CommitMessageHeadFIllerAction extends AnAction {
         );
 
         try {
-            @NotNull String currentBranch = Objects.requireNonNull(
-                                                           Objects.requireNonNull(
-                                                                   GitBranchUtil.getCurrentRepository(
-                                                                           Objects.requireNonNull(event.getProject())
-                                                                   )
-                                                           ).getCurrentBranch())
-                                                   .getName();
+            String[] splitBranchName = Objects.requireNonNull(
+                                            Objects.requireNonNull(
+                                                    GitBranchUtil.getCurrentRepository(
+                                                            Objects.requireNonNull(event.getProject())
+                                                    )
+                                            ).getCurrentBranch())
+                                    .getName().split("/");
+            @NotNull String currentBranch = splitBranchName[splitBranchName.length-1];
 
             HttpResponse<Supplier<JiraIssueResponse>> response = jiraClient.sendIssueInfoRequest(currentBranch).get();
 
