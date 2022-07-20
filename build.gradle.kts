@@ -37,6 +37,10 @@ tasks {
         password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
     }
 
+    buildPlugin{
+        
+    }
+
     publishPlugin {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import static com.valoler.jiraissuecommitnamefiller.utils.AppSettingsUtils.decodeString;
 import static com.valoler.jiraissuecommitnamefiller.utils.AppSettingsUtils.decodeUserCredentials;
 import static com.valoler.jiraissuecommitnamefiller.utils.AppSettingsUtils.encodeUserCredentials;
+import static java.util.Objects.nonNull;
 
 public class AppSettingsConfigurable implements Configurable {
 
@@ -53,7 +54,8 @@ public class AppSettingsConfigurable implements Configurable {
 
     @Override
     public void reset() {
-        if (decodeUserCredentials(settings.getUserCredentials()).length <= 0) {
+        if (nonNull(settings.getUserCredentials())
+                || decodeUserCredentials(settings.getUserCredentials()).length <= 0) {
             return;
         }
         settingsGUI.getUserCredentialsComponents()
