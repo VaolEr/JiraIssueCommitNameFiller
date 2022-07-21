@@ -7,11 +7,13 @@ import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.CommitMessageI;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.ui.Refreshable;
-import com.valoler.jiraissuecommitnamefiller.config.AppSettingsState;
+import com.valoler.jiraissuecommitnamefiller.config.PluginsProjectSettingsState;
 import com.valoler.jiraissuecommitnamefiller.entity.JiraIssueResponse;
+import com.valoler.jiraissuecommitnamefiller.exception.UrlIsNotValidException;
 import com.valoler.jiraissuecommitnamefiller.integration.JiraClient;
-import com.valoler.jiraissuecommitnamefiller.utils.AppSettingsUtils;
+import com.valoler.jiraissuecommitnamefiller.utils.PluginsProjectSettingsUtils;
 import git4idea.branch.GitBranchUtil;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.net.ConnectException;
@@ -20,27 +22,31 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
-public class CommitMessageHeadFIllerAction extends AnAction {
+public class GetCommitMessageHeadAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
 
-        AppSettingsState settings = AppSettingsState.getInstance();
-        String[] credentials = AppSettingsUtils
-                .decodeUserCredentials(settings.getUserCredentials());
+        PluginsProjectSettingsState settings = PluginsProjectSettingsState.getInstance(
+                Objects.requireNonNull(event.getProject())
+        );
 
-        if (credentials.length <= 0) {
-            Messages.showInfoMessage("Please, fill user credentials in plugin settings. \n" +
-                            "File -> Settings -> Tools -> Commit Message Header Filler Plugin or" +
-                            " CTRL + ALT + S -> Tools -> Commit Message Header Filler Plugin",
+        String encodedCredentials = settings.getUserCredentials();
+
+        String[] credentials = PluginsProjectSettingsUtils.decodeUserCredentials(encodedCredentials);
+
+        if (StringUtils.isBlank(encodedCredentials) || credentials.length <= 0) {
+            Messages.showInfoMessage("Please, fill user credentials in plugin settings and press Apply. \n\n" +
+                            "File -> Settings -> Tools -> Commit Message Header Filler Plugin\n\n or\n\n " +
+                            "CTRL + ALT + S -> Tools -> Commit Message Header Filler Plugin",
                     "Plugin Settings Message");
             return;
         }
 
         JiraClient jiraClient = new JiraClient(
-                AppSettingsUtils.decodeString(credentials[2]),
-                AppSettingsUtils.decodeString(credentials[0]).toCharArray(),
-                AppSettingsUtils.decodeString(credentials[1]).toCharArray()
+                PluginsProjectSettingsUtils.decodeString(credentials[2]),
+                PluginsProjectSettingsUtils.decodeString(credentials[0]).toCharArray(),
+                PluginsProjectSettingsUtils.decodeString(credentials[1]).toCharArray()
         );
 
         try {
@@ -79,11 +85,17 @@ public class CommitMessageHeadFIllerAction extends AnAction {
             if (e.getCause() instanceof ConnectException) {
                 errorMessageTemplate = "Connection to [%s] is not possible. Check your internet connection and VPN.";
                 Messages.showErrorDialog(
-                        String.format(errorMessageTemplate, AppSettingsUtils.decodeString(credentials[2])),
+                        String.format(errorMessageTemplate, PluginsProjectSettingsUtils.decodeString(credentials[2])),
                         "Connection Error");
             } else {
                 errorMessageTemplate = "An error occurred: [%s]";
-                Messages.showErrorDialog(String.format(errorMessageTemplate, e.getCause()), "Execution Error");
+                String errorMsg;
+                if (e instanceof UrlIsNotValidException){
+                    errorMsg = String.format(errorMessageTemplate, "URL format is not correct.");
+                } else {
+                    errorMsg = String.format(errorMessageTemplate, e.getCause());
+                }
+                Messages.showErrorDialog(errorMsg, "Execution Error");
             }
         }
     }

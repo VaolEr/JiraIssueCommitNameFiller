@@ -2,6 +2,7 @@ package com.valoler.jiraissuecommitnamefiller.forms;
 
 import com.intellij.openapi.ui.Messages;
 import com.valoler.jiraissuecommitnamefiller.entity.JiraAuthInfoResponse;
+import com.valoler.jiraissuecommitnamefiller.exception.UrlIsNotValidException;
 import com.valoler.jiraissuecommitnamefiller.integration.JiraClient;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 @Data
-public class AppSettingsGUI {
+public class PluginsProjectSettingsGUI {
     private JPanel rootPanel;
     private JPasswordField userPasswordField;
     private JTextField jiraURLField;
@@ -36,7 +37,7 @@ public class AppSettingsGUI {
             )
     );
 
-    public AppSettingsGUI() {
+    public PluginsProjectSettingsGUI() {
         testConnectionButton.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -90,7 +91,13 @@ public class AppSettingsGUI {
                         "Connection Error");
             } else {
                 errorMessageTemplate = "An error occurred: [%s]";
-                Messages.showErrorDialog(String.format(errorMessageTemplate,e.getCause()), "Execution Error");
+                String errorMsg;
+                if (e instanceof UrlIsNotValidException){
+                    errorMsg = String.format(errorMessageTemplate, "URL format is not correct.");
+                } else {
+                    errorMsg = String.format(errorMessageTemplate, e.getCause());
+                }
+                Messages.showErrorDialog(errorMsg, "Execution Error");
             }
         }
     }

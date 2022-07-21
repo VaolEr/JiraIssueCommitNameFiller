@@ -1,6 +1,7 @@
 package com.valoler.jiraissuecommitnamefiller.utils;
 
-import com.valoler.jiraissuecommitnamefiller.config.AppSettingsState;
+import com.intellij.openapi.project.Project;
+import com.valoler.jiraissuecommitnamefiller.config.PluginsProjectSettingsState;
 import org.apache.commons.lang3.ArrayUtils;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -10,11 +11,11 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AppSettingsUtils {
+public class PluginsProjectSettingsUtils {
 
     private static final String SEPARATOR = ":";
 
-    private AppSettingsUtils() {
+    private PluginsProjectSettingsUtils() {
     }
 
     /**
@@ -23,11 +24,11 @@ public class AppSettingsUtils {
      * @param credentials credentials as char arrays to encode
      * @return encoded user credentials
      */
-    public static String encodeUserCredentials(char[]... credentials) {
-        AppSettingsState.getInstance().setCredentialsCount((long) credentials.length);
+    public static String encodeUserCredentials(Project project, char[]... credentials) {
+        PluginsProjectSettingsState.getInstance(project).setCredentialsCount((long) credentials.length);
         return encodeCredential(
                 Arrays.stream(credentials)
-                      .map(AppSettingsUtils::encodeCredential)
+                      .map(PluginsProjectSettingsUtils::encodeCredential)
                       .collect(Collectors.joining(SEPARATOR))
                       .toCharArray()
         );
@@ -39,12 +40,12 @@ public class AppSettingsUtils {
      * @param credentials credentials as char arrays to encode
      * @return encoded user credentials
      */
-    public static String encodeUserCredentials(List<char[]> credentials) {
-        AppSettingsState.getInstance().setCredentialsCount((long) credentials.size());
+    public static String encodeUserCredentials(Project project, List<char[]> credentials) {
+        PluginsProjectSettingsState.getInstance(project).setCredentialsCount((long) credentials.size());
         return encodeCredential(
                 credentials
                         .stream()
-                        .map(AppSettingsUtils::encodeCredential)
+                        .map(PluginsProjectSettingsUtils::encodeCredential)
                         .collect(Collectors.joining(SEPARATOR))
                         .toCharArray()
         );
@@ -78,7 +79,10 @@ public class AppSettingsUtils {
      * @return decoded string
      */
     public static String decodeString(String encodedString) {
-        return new String(Base64.getDecoder().decode(encodedString), StandardCharsets.UTF_8);
+        return new String(
+                Base64.getDecoder().decode(encodedString),
+                StandardCharsets.UTF_8
+        );
     }
 
     /**

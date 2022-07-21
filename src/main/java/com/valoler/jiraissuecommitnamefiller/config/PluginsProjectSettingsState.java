@@ -4,8 +4,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.valoler.jiraissuecommitnamefiller.utils.AppSettingsUtils;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,22 +15,26 @@ import org.jetbrains.annotations.Nullable;
         storages = @Storage("JiraIssueCommitMessageHeadFiller.xml")
 )
 @Data
-public class AppSettingsState implements PersistentStateComponent<AppSettingsState> {
+public class PluginsProjectSettingsState implements PersistentStateComponent<PluginsProjectSettingsState> {
 
     private String userCredentials;
     private Long credentialsCount;
 
-    public static AppSettingsState getInstance() {
-        return ApplicationManager.getApplication().getService(AppSettingsState.class);
+//    public static PluginsProjectSettingsState getInstance() {
+//        return ApplicationManager.getApplication().getService(PluginsProjectSettingsState.class);
+//    }
+
+    public static PluginsProjectSettingsState getInstance(Project project) {
+        return project.getService(PluginsProjectSettingsState.class);
     }
 
     @Override
-    public @Nullable AppSettingsState getState() {
+    public @Nullable PluginsProjectSettingsState getState() {
         return this;
     }
 
     @Override
-    public void loadState(@NotNull AppSettingsState state) {
+    public void loadState(@NotNull PluginsProjectSettingsState state) {
         XmlSerializerUtil.copyBean(state, this);
     }
 }

@@ -2,7 +2,8 @@ package com.valoler.jiraissuecommitnamefiller.config;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
-import com.valoler.jiraissuecommitnamefiller.forms.AppSettingsGUI;
+import com.intellij.openapi.project.Project;
+import com.valoler.jiraissuecommitnamefiller.forms.PluginsProjectSettingsGUI;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -11,15 +12,23 @@ import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.valoler.jiraissuecommitnamefiller.utils.AppSettingsUtils.decodeString;
-import static com.valoler.jiraissuecommitnamefiller.utils.AppSettingsUtils.decodeUserCredentials;
-import static com.valoler.jiraissuecommitnamefiller.utils.AppSettingsUtils.encodeUserCredentials;
-import static java.util.Objects.nonNull;
+import static com.valoler.jiraissuecommitnamefiller.utils.PluginsProjectSettingsUtils.decodeString;
+import static com.valoler.jiraissuecommitnamefiller.utils.PluginsProjectSettingsUtils.decodeUserCredentials;
+import static com.valoler.jiraissuecommitnamefiller.utils.PluginsProjectSettingsUtils.encodeUserCredentials;
+import static java.util.Objects.isNull;
 
-public class AppSettingsConfigurable implements Configurable {
+public class PluginsProjectSettingsConfigurable implements Configurable {
 
-    private AppSettingsGUI settingsGUI;
-    private final AppSettingsState settings = AppSettingsState.getInstance();
+    private PluginsProjectSettingsGUI settingsGUI;
+
+    private final Project project;
+
+    private final PluginsProjectSettingsState settings;
+
+    public PluginsProjectSettingsConfigurable(Project project) {
+        this.project = project;
+        this.settings = PluginsProjectSettingsState.getInstance(project);
+    }
 
     @Override
     @Nls(capitalization = Nls.Capitalization.Title)
@@ -34,7 +43,7 @@ public class AppSettingsConfigurable implements Configurable {
 
     @Override
     public @Nullable JComponent createComponent() {
-        settingsGUI = new AppSettingsGUI();
+        settingsGUI = new PluginsProjectSettingsGUI();
         return settingsGUI.getRootPanel();
     }
 
@@ -42,18 +51,18 @@ public class AppSettingsConfigurable implements Configurable {
     public boolean isModified() {
         return !StringUtils.equals(
                 settings.getUserCredentials(),
-                encodeUserCredentials(getUserCredentialsAsCharArrays())
+                encodeUserCredentials(project, getUserCredentialsAsCharArrays())
         );
     }
 
     @Override
     public void apply() throws ConfigurationException {
-        settings.setUserCredentials(encodeUserCredentials(getUserCredentialsAsCharArrays()));
+        settings.setUserCredentials(encodeUserCredentials(project, getUserCredentialsAsCharArrays()));
     }
 
     @Override
     public void reset() {
-        if (nonNull(settings.getUserCredentials())
+        if (isNull(settings.getUserCredentials())
                 || decodeUserCredentials(settings.getUserCredentials()).length <= 0) {
             return;
         }
@@ -85,5 +94,4 @@ public class AppSettingsConfigurable implements Configurable {
                           )
                           .collect(Collectors.toList());
     }
-
 }
