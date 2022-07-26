@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.valoler"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 dependencies{
     // https://mvnrepository.com/artifact/commons-validator/commons-validator
