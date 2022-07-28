@@ -19,7 +19,7 @@ jdk: openjdk11
 #    - $HOME/.gradle/wrapper/
 
 script:
-  - ./gradlew build --scan -s --refresh-dependencies
+  - ./gradlew build --scan -s --refresh-dependencies --debug
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
