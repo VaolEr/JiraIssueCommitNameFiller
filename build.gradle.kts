@@ -20,6 +20,9 @@ dependencies{
 
 repositories {
     mavenCentral()
+    maven (
+        "https://www.jetbrains.com/intellij-repository/releases"
+    )
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
