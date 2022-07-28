@@ -1,4 +1,4 @@
-[![Build Status](https://www.travis-ci.com/VaolEr/TelegramHLTVBot.svg?branch=master)](https://www.travis-ci.com/VaolEr/TelegramHLTVBot)
+[![Build Status](https://app.travis-ci.com/VaolEr/JiraIssueCommitNameFiller.svg?branch=master)](https://app.travis-ci.com/VaolEr/JiraIssueCommitNameFiller)
 [![codecov](https://codecov.io/gh/VaolEr/TelegramHLTVBot/branch/master/graph/badge.svg?token=G2R8G1BGIX)](https://codecov.io/gh/VaolEr/TelegramHLTVBot)
 
 # Git commit header filler Plugin for IntelliJ
