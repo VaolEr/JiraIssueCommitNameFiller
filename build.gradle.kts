@@ -45,6 +45,10 @@ tasks {
         untilBuild.set("222.*")
     }
 
+    instrumentCode{
+        compilerVersion.set("203.7707.56")
+    }
+
     signPlugin {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
         privateKey.set(System.getenv("PRIVATE_KEY"))
