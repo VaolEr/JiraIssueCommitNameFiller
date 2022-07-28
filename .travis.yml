@@ -7,9 +7,14 @@ install: skip
 
 os: linux
 dist: trusty
-jdk: adopt-openj9@1.11.0-4
-#matrix:
-#  - TRAVIS_JDK=adopt-openj9@1.11.0-4
+
+env:
+  matrix:
+    - TRAVIS_JDK=adopt-openj9@1.11.0-4
+
+#jdk: adopt-openj9@1.11.0-4
+##matrix:
+##  - TRAVIS_JDK=adopt-openj9@1.11.0-4
 
 #before_cache:
 #  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
