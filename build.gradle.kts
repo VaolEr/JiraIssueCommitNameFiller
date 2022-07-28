@@ -46,8 +46,7 @@ tasks {
     }
 
     instrumentCode{
-//        compilerVersion.set("203.7707.56")
-        false
+        compilerVersion.set("213.7172.33")
     }
 
     signPlugin {
