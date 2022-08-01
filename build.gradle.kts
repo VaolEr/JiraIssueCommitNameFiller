@@ -2,8 +2,10 @@ plugins {
     id("java")
     id("org.jetbrains.intellij") version "1.7.0"
     id ("io.freefair.lombok") version "6.5.0.3"
-    id("jacoco")
+    jacoco
 }
+
+val junit5Version = "5.3.1"
 
 group = "com.valoler"
 version = "1.0-SNAPSHOT"
@@ -17,6 +19,13 @@ dependencies{
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.3")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
+}
+
+// This might not be needed in the future, but as of present the default version bundled with the latest version of gradle does not work with Java 11
+jacoco {
+    toolVersion = "0.8.2"
 }
 
 repositories {
@@ -60,12 +69,36 @@ tasks {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }
 
-    // Generate code coverage reports ... run with jacoco
-    jacocoTestReport {
-        reports {
-            csv.required.set(false)
-            xml.required.set(true)
-            html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
-        }
+    "test"(Test::class) {
+        useJUnitPlatform()
     }
+
+    val codeCoverageReport by creating(JacocoReport::class) {
+        executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
+
+        subprojects.onEach {
+            sourceSets(it.sourceSets["main"])
+        }
+
+        reports {
+            sourceDirectories.setFrom(files(sourceSets["main"].allSource.srcDirs))
+            classDirectories.setFrom(files(sourceSets["main"].output))
+            xml.required.set(true)
+            xml.outputLocation.set(File("$buildDir/reports/jacoco/report.xml"))
+            html.required.set(false)
+            csv.required.set(false)
+        }
+
+        dependsOn("test")
+    }
+
+//    // Generate code coverage reports ... run with jacoco
+//    jacocoTestReport {
+//        reports {
+//            csv.required.set(false)
+//            xml.required.set(true)
+//            html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+//        }
+//        dependsOn("test")
+//    }
 }
