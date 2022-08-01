@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("org.jetbrains.intellij") version "1.7.0"
     id ("io.freefair.lombok") version "6.5.0.3"
+    id("jacoco")
 }
 
 group = "com.valoler"
@@ -57,5 +58,14 @@ tasks {
 
     publishPlugin {
         token.set(System.getenv("PUBLISH_TOKEN"))
+    }
+
+    // Generate code coverage reports ... run with jacoco
+    jacocoTestReport {
+        reports {
+            csv.required.set(false)
+            xml.required.set(true)
+            html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+        }
     }
 }
